@@ -123,28 +123,6 @@
             transform: translateY(-2px);
         }
 
-        .connection-status {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .test-btn {
-            background: linear-gradient(45deg, #ff6b6b, #ff5252);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: 600;
-            margin: 5px;
-            transition: all 0.3s ease;
-        }
-
-        .test-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
         .status {
             text-align: center;
             margin: 20px 0;
@@ -166,6 +144,11 @@
 
         .status.error {
             background: linear-gradient(90deg, #ff6b6b, #ff5252);
+            color: white;
+        }
+
+        .status.info {
+            background: linear-gradient(90deg, #74b9ff, #0984e3);
             color: white;
         }
 
@@ -309,14 +292,12 @@
             font-size: 0.9em;
         }
 
-        .cors-notice {
-            background: linear-gradient(45deg, #ffeaa7, #fdcb6e);
-            color: #2d3436;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-weight: 600;
+        .solution-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 5px solid #667eea;
         }
 
         @media (max-width: 768px) {
@@ -347,15 +328,6 @@
         </div>
 
         <div class="search-section">
-            <div class="cors-notice" id="corsNotice" style="display: none;">
-                ⚠️ Backend connection blocked by CORS. Using proxy endpoint...
-            </div>
-            
-            <div class="connection-status">
-                <button class="test-btn" onclick="testBackendConnection()">🧪 Test Backend</button>
-                <button class="test-btn" onclick="testProxyConnection()">🔗 Test Proxy</button>
-            </div>
-
             <div class="quick-search">
                 <button class="quick-btn" onclick="quickSearch('plasma stablecoin')">🪙 Plasma Stablecoin</button>
                 <button class="quick-btn" onclick="quickSearch('XPL token')">💎 XPL Token</button>
@@ -396,15 +368,9 @@
     </div>
 
     <script>
-        // Multiple API endpoints to try
-        const API_ENDPOINTS = [
-            'https://162.250.191.81',          // HTTPS (if SSL is enabled)
-            'http://162.250.191.81:4001',      // Direct HTTP backend
-            'https://162.250.191.81:4001'      // HTTPS backend (if SSL on port 4001)
-        ];
+        // HTTPS endpoint (once SSL is enabled)
+        const API_BASE_URL = 'https://162.250.191.81';
         
-        let workingEndpoint = null;
-
         function showStatus(message, type) {
             const status = document.getElementById('status');
             status.textContent = message;
@@ -422,8 +388,8 @@
             const totalLikes = document.getElementById('totalLikes');
             const totalRetweets = document.getElementById('totalRetweets');
 
-            const likes = tweets.reduce((sum, tweet) => sum + (tweet.metrics?.like_count || 0), 0);
-            const retweets = tweets.reduce((sum, tweet) => sum + (tweet.metrics?.retweet_count || 0), 0);
+            const likes = tweets.reduce((sum, tweet) => sum + (tweet.public_metrics?.like_count || 0), 0);
+            const retweets = tweets.reduce((sum, tweet) => sum + (tweet.public_metrics?.retweet_count || 0), 0);
 
             totalTweets.textContent = tweets.length;
             totalLikes.textContent = formatNumber(likes);
@@ -460,7 +426,7 @@
                 <div class="tweet-card">
                     <div class="author-info">
                         <img 
-                            src="${tweet.author?.profile_image_url || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjUiIGN5PSIyNSIgcj0iMjUiIGZpbGw9IiM2NjdlZWEiLz4KPHN2ZyB3aWR0aD0iMzAiIGhlaWdodD0iMzAiIHZpZXdCb3g9IjAgMCAzMCAzMCIgZmlsbD0id2hpdGUiIHg9IjEwIiB5PSIxMCI+CjxwYXRoIGQ9Ik0xNSAwQzIzLjI4NDMgMCAzMCA2LjcxNTcgMzAgMTVDMzAgMjMuMjg0MyAyMy4yODQzIDMwIDE1IDMwQzYuNzE1NyAzMCAwIDIzLjI4NDMgMCAxNUMwIDYuNzE1NyA2LjcxNTcgMCAxNSAwWk0xNSAyN0MyMS42MjI1IDI3IDI3IDIxLjYyMjUgMjcgMTVDMjcgOC4zNzc1IDIxLjYyMjUgMyAxNSAzQzguMzc3NSAzIDMgOC4zNzc1IDMgMTVDMyAyMS42MjI1IDguMzc3NSAyNyAxNSAyN1oiLz4KPC9zdmc+Cjwvc3ZnPgo='}" 
+                            src="${tweet.author?.profile_image_url || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjUiIGN5PSIyNSIgcj0iMjUiIGZpbGw9IiM2NjdlZWEiLz4KPHBhdGggZD0iTTI1IDEwYzguMjg0IDAgMTUgNi43MTYgMTUgMTVzLTYuNzE2IDE1LTE1IDE1LTExNS02LjcxNi0xNVMxNi43MTYgMTAgMjUgMTB6bTAgM2ExMiAxMiAwIDEgMCAwIDI0IDEyIDEyIDAgMCAwIDAtMjR6IiBmaWxsPSIjZmZmIi8+CjxwYXRoIGQ9Ik0yNSAxNWE3IDcgMCAwIDAtNyA3aDJhNSA1IDAgMSAxIDUgNXYyYTcgNyAwIDAgMC0wLTE0eiIgZmlsbD0iI2ZmZiIvPgo8Y2lyY2xlIGN4PSIyNSIgY3k9IjMzIiByPSIyIiBmaWxsPSIjZmZmIi8+Cjwvc3ZnPgo='}" 
                             alt="${tweet.author?.name || 'User'}" 
                             class="author-avatar"
                         >
@@ -492,58 +458,35 @@
             updateStats(tweets);
         }
 
-        async function testEndpoint(endpoint, path = '') {
-            try {
-                const response = await fetch(`${endpoint}${path}`, {
-                    method: 'GET',
-                    mode: 'cors',
-                    headers: {
-                        'Accept': 'application/json',
-                    },
-                });
-                const data = await response.json();
-                return { success: true, data, endpoint };
-            } catch (error) {
-                return { success: false, error: error.message, endpoint };
-            }
-        }
+        function showSolution() {
+            document.getElementById('results').innerHTML = `
+                <div class="solution-card">
+                    <h3 style="color: #667eea; margin-bottom: 20px;">🔧 Backend Connection Issue</h3>
+                    <p style="margin-bottom: 15px;"><strong>Problem:</strong> GitHub Pages (HTTPS) cannot connect to HTTP backend due to Mixed Content security policy.</p>
+                    
+                    <h4 style="color: #667eea; margin: 20px 0 10px 0;">✅ Solutions:</h4>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <strong>Option 1: Use Working Local Version</strong>
+                        <p style="margin: 10px 0;">Access your fully working frontend at:</p>
+                        <a href="http://162.250.191.81:4001/plasma-hub.html" target="_blank" style="background: #42e695; color: white; padding: 10px 20px; border-radius: 10px; text-decoration: none; display: inline-block;">
+                            🚀 Open Working Version
+                        </a>
+                    </div>
 
-        async function findWorkingEndpoint() {
-            showStatus('🔍 Testing backend connections...', 'loading');
-            
-            for (const endpoint of API_ENDPOINTS) {
-                const result = await testEndpoint(endpoint, '/');
-                if (result.success) {
-                    workingEndpoint = endpoint;
-                    showStatus(`✅ Connected to backend at ${endpoint}`, 'success');
-                    setTimeout(hideStatus, 3000);
-                    return endpoint;
-                }
-            }
-            
-            showStatus('❌ Could not connect to any backend endpoint', 'error');
-            document.getElementById('corsNotice').style.display = 'block';
-            return null;
-        }
+                    <div style="margin-bottom: 20px;">
+                        <strong>Option 2: Enable HTTPS (Recommended)</strong>
+                        <p style="margin: 10px 0;">Run these commands on your server:</p>
+                        <pre style="background: #f8f9fa; padding: 15px; border-radius: 10px; overflow-x: auto; font-size: 0.9em;">sudo apt install nginx certbot python3-certbot-nginx -y
+sudo certbot --nginx -d 162.250.191.81</pre>
+                    </div>
 
-        async function testBackendConnection() {
-            const result = await findWorkingEndpoint();
-            if (result) {
-                showStatus(`✅ Backend connected: ${result}`, 'success');
-            }
-        }
-
-        async function testProxyConnection() {
-            if (!workingEndpoint) {
-                await findWorkingEndpoint();
-            }
-            
-            if (workingEndpoint) {
-                showStatus('✅ Proxy connection ready!', 'success');
-                setTimeout(hideStatus, 3000);
-            } else {
-                showStatus('❌ Proxy connection failed', 'error');
-            }
+                    <div>
+                        <strong>Current Status:</strong>
+                        <p style="margin: 10px 0;">Your backend is running perfectly, just needs HTTPS to work with GitHub Pages.</p>
+                    </div>
+                </div>
+            `;
         }
 
         async function performSearch() {
@@ -554,39 +497,10 @@
                 return;
             }
 
-            if (!workingEndpoint) {
-                showStatus('🔍 Finding backend connection...', 'loading');
-                await findWorkingEndpoint();
-            }
-
-            if (!workingEndpoint) {
-                showStatus('❌ No backend connection available', 'error');
-                return;
-            }
-
             showStatus(`🔍 Searching Twitter for: ${query}`, 'loading');
             
             try {
-                // Try direct API call first
-                let response = await fetch(`${workingEndpoint}/api/search-twitter?query=${encodeURIComponent(query)}&max_results=20`, {
-                    method: 'GET',
-                    mode: 'cors',
-                    headers: {
-                        'Accept': 'application/json',
-                    },
-                });
-
-                // If direct call fails, try proxy endpoint
-                if (!response.ok && workingEndpoint.includes('https')) {
-                    response = await fetch(`${workingEndpoint}/api/proxy-search?query=${encodeURIComponent(query)}&max_results=20`, {
-                        method: 'GET',
-                        mode: 'cors',
-                        headers: {
-                            'Accept': 'application/json',
-                        },
-                    });
-                }
-
+                const response = await fetch(`${API_BASE_URL}/api/search-twitter?query=${encodeURIComponent(query)}&max_results=20`);
                 const data = await response.json();
 
                 if (data.success && data.tweets) {
@@ -598,29 +512,14 @@
                 }
             } catch (error) {
                 console.error('Search error:', error);
-                showStatus(`❌ Error: ${error.message}`, 'error');
                 
-                let errorMessage = error.message;
-                if (error.message.includes('CORS') || error.message.includes('Mixed Content')) {
-                    errorMessage = 'Connection blocked by browser security. Please use the local version or enable HTTPS on backend.';
-                    document.getElementById('corsNotice').style.display = 'block';
-                } else if (error.message.includes('429') || error.message.includes('rate limit')) {
-                    errorMessage = 'Twitter API rate limit reached. Please wait 15 minutes and try again.';
+                if (error.message.includes('Failed to fetch') || error.message.includes('CORS') || error.message.includes('ERR_SSL_PROTOCOL_ERROR')) {
+                    showStatus('⚠️ Backend connection blocked. See solution below.', 'info');
+                    showSolution();
+                } else {
+                    showStatus(`❌ Error: ${error.message}`, 'error');
+                    setTimeout(hideStatus, 5000);
                 }
-
-                document.getElementById('results').innerHTML = `
-                    <div class="tweet-card">
-                        <h3 style="color: #ff6b6b;">Search Failed</h3>
-                        <p>Error: ${errorMessage}</p>
-                        <p style="margin-top: 15px;"><strong>Solutions:</strong></p>
-                        <ul style="margin-left: 20px; margin-top: 10px;">
-                            <li>Try the local version: http://162.250.191.81:4001/plasma-hub.html</li>
-                            <li>Wait for API rate limits to reset (15 minutes)</li>
-                            <li>Contact admin to enable HTTPS on the backend</li>
-                        </ul>
-                    </div>
-                `;
-                setTimeout(hideStatus, 8000);
             }
         }
 
@@ -635,16 +534,12 @@
             }
         }
 
-        // Initialize and test connection on page load
-        window.onload = async function() {
-            await findWorkingEndpoint();
-            
-            // Load default search if connection is working
-            if (workingEndpoint) {
-                setTimeout(() => quickSearch('plasma stablecoin'), 1000);
-            } else {
-                document.getElementById('corsNotice').style.display = 'block';
-            }
+        // Initialize
+        window.onload = function() {
+            showStatus('🔧 Testing backend connection...', 'loading');
+            setTimeout(() => {
+                quickSearch('plasma stablecoin');
+            }, 1000);
         };
     </script>
 </body>
