@@ -630,16 +630,16 @@
         <div class="search-container">
             <!-- SEARCH TABS -->
             <div class="search-tabs">
-                <button class="tab-btn active" onclick="switchTab('user')">Search by User</button>
-                <button class="tab-btn" onclick="switchTab('keyword')">Search by Keyword</button>
-                <button class="tab-btn" onclick="switchTab('trending')">Trending</button>
+                <button class="tab-btn active" data-tab="user">Search by User</button>
+                <button class="tab-btn" data-tab="keyword">Search by Keyword</button>
+                <button class="tab-btn" data-tab="trending">Trending</button>
             </div>
 
             <!-- USER SEARCH -->
             <div id="userSearch" class="search-panel">
                 <div class="search-input-group">
                     <input type="text" class="search-input" id="userInput" placeholder="Enter username (e.g., @username or username)">
-                    <button class="search-btn" onclick="searchByUser()">Search User</button>
+                    <button class="search-btn" id="searchUserBtn">Search User</button>
                 </div>
             </div>
 
@@ -647,24 +647,24 @@
             <div id="keywordSearch" class="search-panel" style="display: none;">
                 <div class="search-input-group">
                     <input type="text" class="search-input" id="keywordInput" placeholder="Enter keywords (e.g., Plasma, Stable, Trillion)">
-                    <button class="search-btn" onclick="searchByKeyword()">Search Posts</button>
+                    <button class="search-btn" id="searchKeywordBtn">Search Posts</button>
                 </div>
             </div>
 
             <!-- TRENDING -->
             <div id="trendingSearch" class="search-panel" style="display: none;">
                 <div style="text-align: center; padding: 2rem;">
-                    <button class="search-btn" onclick="loadTrending()">Load Trending Posts</button>
+                    <button class="search-btn" id="loadTrendingBtn">Load Trending Posts</button>
                 </div>
             </div>
 
             <!-- FILTERS -->
             <div class="filters">
-                <div class="filter-chip active" onclick="toggleFilter(this, 'all')">All Posts</div>
-                <div class="filter-chip" onclick="toggleFilter(this, 'plasma')">Plasma Only</div>
-                <div class="filter-chip" onclick="toggleFilter(this, 'stable')">Stable Only</div>
-                <div class="filter-chip" onclick="toggleFilter(this, 'verified')">Verified Users</div>
-                <div class="filter-chip" onclick="toggleFilter(this, 'recent')">Last 24h</div>
+                <div class="filter-chip active" data-filter="all">All Posts</div>
+                <div class="filter-chip" data-filter="plasma">Plasma Only</div>
+                <div class="filter-chip" data-filter="stable">Stable Only</div>
+                <div class="filter-chip" data-filter="verified">Verified Users</div>
+                <div class="filter-chip" data-filter="recent">Last 24h</div>
             </div>
         </div>
     </section>
@@ -693,7 +693,7 @@
     <section class="results-section" id="resultsSection" style="display: none;">
         <div class="results-header">
             <h2 class="results-title">Search Results</h2>
-            <select class="sort-dropdown" onchange="sortResults(this.value)">
+            <select class="sort-dropdown" id="sortDropdown">
                 <option value="recent">Most Recent</option>
                 <option value="engagement">Most Engagement</option>
                 <option value="likes">Most Likes</option>
@@ -744,8 +744,8 @@
     </div>
 
     <script>
-        // Configuration
-        const API_BASE = const API_BASE = 'https://seismicwall.duckdns.org/api'; // UPDATE THIS WITH YOUR BACKEND URL
+        // Configuration - UPDATE THIS WITH YOUR BACKEND URL
+        const API_BASE = 'https://seismicwall.duckdns.org/api';
         let currentTab = 'user';
         let currentFilter = 'all';
         let allPosts = [];
@@ -754,8 +754,44 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             checkConnection();
-            setupEnterKey();
+            setupEventListeners();
         });
+
+        // Setup all event listeners
+        function setupEventListeners() {
+            // Tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    switchTab(this.getAttribute('data-tab'));
+                });
+            });
+
+            // Search buttons
+            document.getElementById('searchUserBtn').addEventListener('click', searchByUser);
+            document.getElementById('searchKeywordBtn').addEventListener('click', searchByKeyword);
+            document.getElementById('loadTrendingBtn').addEventListener('click', loadTrending);
+
+            // Filter chips
+            document.querySelectorAll('.filter-chip').forEach(chip => {
+                chip.addEventListener('click', function() {
+                    toggleFilter(this, this.getAttribute('data-filter'));
+                });
+            });
+
+            // Sort dropdown
+            document.getElementById('sortDropdown').addEventListener('change', function() {
+                sortResults(this.value);
+            });
+
+            // Enter key for search
+            document.getElementById('userInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') searchByUser();
+            });
+            
+            document.getElementById('keywordInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') searchByKeyword();
+            });
+        }
 
         // Check backend connection
         async function checkConnection() {
@@ -788,8 +824,10 @@
             // Update tab buttons
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('active');
+                if (btn.getAttribute('data-tab') === tab) {
+                    btn.classList.add('active');
+                }
             });
-            event.target.classList.add('active');
             
             // Hide all panels
             document.getElementById('userSearch').style.display = 'none';
@@ -1107,17 +1145,6 @@
             if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
             if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
             return num.toString();
-        }
-
-        // Setup enter key for search
-        function setupEnterKey() {
-            document.getElementById('userInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') searchByUser();
-            });
-            
-            document.getElementById('keywordInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') searchByKeyword();
-            });
         }
 
         // Demo data generators
