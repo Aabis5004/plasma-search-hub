@@ -123,6 +123,28 @@
             transform: translateY(-2px);
         }
 
+        .connection-status {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .test-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ff5252);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .test-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
         .status {
             text-align: center;
             margin: 20px 0;
@@ -287,6 +309,16 @@
             font-size: 0.9em;
         }
 
+        .cors-notice {
+            background: linear-gradient(45deg, #ffeaa7, #fdcb6e);
+            color: #2d3436;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2.5em;
@@ -315,6 +347,15 @@
         </div>
 
         <div class="search-section">
+            <div class="cors-notice" id="corsNotice" style="display: none;">
+                ⚠️ Backend connection blocked by CORS. Using proxy endpoint...
+            </div>
+            
+            <div class="connection-status">
+                <button class="test-btn" onclick="testBackendConnection()">🧪 Test Backend</button>
+                <button class="test-btn" onclick="testProxyConnection()">🔗 Test Proxy</button>
+            </div>
+
             <div class="quick-search">
                 <button class="quick-btn" onclick="quickSearch('plasma stablecoin')">🪙 Plasma Stablecoin</button>
                 <button class="quick-btn" onclick="quickSearch('XPL token')">💎 XPL Token</button>
@@ -355,8 +396,15 @@
     </div>
 
     <script>
-        const API_BASE_URL = 'http://162.250.191.81:4001';
+        // Multiple API endpoints to try
+        const API_ENDPOINTS = [
+            'https://162.250.191.81',          // HTTPS (if SSL is enabled)
+            'http://162.250.191.81:4001',      // Direct HTTP backend
+            'https://162.250.191.81:4001'      // HTTPS backend (if SSL on port 4001)
+        ];
         
+        let workingEndpoint = null;
+
         function showStatus(message, type) {
             const status = document.getElementById('status');
             status.textContent = message;
@@ -412,37 +460,90 @@
                 <div class="tweet-card">
                     <div class="author-info">
                         <img 
-                            src="${tweet.author.profile_image || '/api/placeholder/50/50'}" 
-                            alt="${tweet.author.name}" 
+                            src="${tweet.author?.profile_image_url || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjUiIGN5PSIyNSIgcj0iMjUiIGZpbGw9IiM2NjdlZWEiLz4KPHN2ZyB3aWR0aD0iMzAiIGhlaWdodD0iMzAiIHZpZXdCb3g9IjAgMCAzMCAzMCIgZmlsbD0id2hpdGUiIHg9IjEwIiB5PSIxMCI+CjxwYXRoIGQ9Ik0xNSAwQzIzLjI4NDMgMCAzMCA2LjcxNTcgMzAgMTVDMzAgMjMuMjg0MyAyMy4yODQzIDMwIDE1IDMwQzYuNzE1NyAzMCAwIDIzLjI4NDMgMCAxNUMwIDYuNzE1NyA2LjcxNTcgMCAxNSAwWk0xNSAyN0MyMS42MjI1IDI3IDI3IDIxLjYyMjUgMjcgMTVDMjcgOC4zNzc1IDIxLjYyMjUgMyAxNSAzQzguMzc3NSAzIDMgOC4zNzc1IDMgMTVDMyAyMS42MjI1IDguMzc3NSAyNyAxNSAyN1oiLz4KPC9zdmc+Cjwvc3ZnPgo='}" 
+                            alt="${tweet.author?.name || 'User'}" 
                             class="author-avatar"
-                            onerror="this.src='/api/placeholder/50/50'"
                         >
                         <div class="author-details">
                             <h3>
-                                ${tweet.author.name}
-                                ${tweet.author.verified ? '<span class="verified">✓</span>' : ''}
+                                ${tweet.author?.name || 'Unknown User'}
+                                ${tweet.author?.verified ? '<span class="verified">✓</span>' : ''}
                             </h3>
-                            <div class="author-username">@${tweet.author.username}</div>
+                            <div class="author-username">@${tweet.author?.username || 'unknown'}</div>
                         </div>
                     </div>
                     
                     <div class="tweet-text">${tweet.text}</div>
                     
                     <div class="tweet-metrics">
-                        <div class="metric likes">❤️ ${formatNumber(tweet.metrics?.like_count || 0)}</div>
-                        <div class="metric retweets">🔄 ${formatNumber(tweet.metrics?.retweet_count || 0)}</div>
-                        <div class="metric replies">💬 ${formatNumber(tweet.metrics?.reply_count || 0)}</div>
+                        <div class="metric likes">❤️ ${formatNumber(tweet.public_metrics?.like_count || 0)}</div>
+                        <div class="metric retweets">🔄 ${formatNumber(tweet.public_metrics?.retweet_count || 0)}</div>
+                        <div class="metric replies">💬 ${formatNumber(tweet.public_metrics?.reply_count || 0)}</div>
                     </div>
                     
                     <div class="tweet-date">📅 ${formatDate(tweet.created_at)}</div>
                     
-                    <a href="${tweet.url}" target="_blank" class="tweet-link">
+                    <a href="https://twitter.com/${tweet.author?.username}/status/${tweet.id}" target="_blank" class="tweet-link">
                         🐦 View on Twitter
                     </a>
                 </div>
             `).join('');
 
             updateStats(tweets);
+        }
+
+        async function testEndpoint(endpoint, path = '') {
+            try {
+                const response = await fetch(`${endpoint}${path}`, {
+                    method: 'GET',
+                    mode: 'cors',
+                    headers: {
+                        'Accept': 'application/json',
+                    },
+                });
+                const data = await response.json();
+                return { success: true, data, endpoint };
+            } catch (error) {
+                return { success: false, error: error.message, endpoint };
+            }
+        }
+
+        async function findWorkingEndpoint() {
+            showStatus('🔍 Testing backend connections...', 'loading');
+            
+            for (const endpoint of API_ENDPOINTS) {
+                const result = await testEndpoint(endpoint, '/');
+                if (result.success) {
+                    workingEndpoint = endpoint;
+                    showStatus(`✅ Connected to backend at ${endpoint}`, 'success');
+                    setTimeout(hideStatus, 3000);
+                    return endpoint;
+                }
+            }
+            
+            showStatus('❌ Could not connect to any backend endpoint', 'error');
+            document.getElementById('corsNotice').style.display = 'block';
+            return null;
+        }
+
+        async function testBackendConnection() {
+            const result = await findWorkingEndpoint();
+            if (result) {
+                showStatus(`✅ Backend connected: ${result}`, 'success');
+            }
+        }
+
+        async function testProxyConnection() {
+            if (!workingEndpoint) {
+                await findWorkingEndpoint();
+            }
+            
+            if (workingEndpoint) {
+                showStatus('✅ Proxy connection ready!', 'success');
+                setTimeout(hideStatus, 3000);
+            } else {
+                showStatus('❌ Proxy connection failed', 'error');
+            }
         }
 
         async function performSearch() {
@@ -453,20 +554,39 @@
                 return;
             }
 
-            showStatus('🔍 Searching Twitter for: ' + query, 'loading');
+            if (!workingEndpoint) {
+                showStatus('🔍 Finding backend connection...', 'loading');
+                await findWorkingEndpoint();
+            }
+
+            if (!workingEndpoint) {
+                showStatus('❌ No backend connection available', 'error');
+                return;
+            }
+
+            showStatus(`🔍 Searching Twitter for: ${query}`, 'loading');
             
             try {
-                // First, save the search query
-                await fetch(`${API_BASE_URL}/users`, {
-                    method: 'POST',
+                // Try direct API call first
+                let response = await fetch(`${workingEndpoint}/api/search-twitter?query=${encodeURIComponent(query)}&max_results=20`, {
+                    method: 'GET',
+                    mode: 'cors',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
                     },
-                    body: JSON.stringify({ username: query })
                 });
 
-                // Then search Twitter
-                const response = await fetch(`${API_BASE_URL}/api/search-twitter?query=${encodeURIComponent(query)}&max_results=20`);
+                // If direct call fails, try proxy endpoint
+                if (!response.ok && workingEndpoint.includes('https')) {
+                    response = await fetch(`${workingEndpoint}/api/proxy-search?query=${encodeURIComponent(query)}&max_results=20`, {
+                        method: 'GET',
+                        mode: 'cors',
+                        headers: {
+                            'Accept': 'application/json',
+                        },
+                    });
+                }
+
                 const data = await response.json();
 
                 if (data.success && data.tweets) {
@@ -474,19 +594,33 @@
                     displayTweets(data.tweets);
                     setTimeout(hideStatus, 3000);
                 } else {
-                    throw new Error(data.details || 'Failed to search Twitter');
+                    throw new Error(data.details || data.error || 'Failed to search Twitter');
                 }
             } catch (error) {
                 console.error('Search error:', error);
                 showStatus(`❌ Error: ${error.message}`, 'error');
+                
+                let errorMessage = error.message;
+                if (error.message.includes('CORS') || error.message.includes('Mixed Content')) {
+                    errorMessage = 'Connection blocked by browser security. Please use the local version or enable HTTPS on backend.';
+                    document.getElementById('corsNotice').style.display = 'block';
+                } else if (error.message.includes('429') || error.message.includes('rate limit')) {
+                    errorMessage = 'Twitter API rate limit reached. Please wait 15 minutes and try again.';
+                }
+
                 document.getElementById('results').innerHTML = `
                     <div class="tweet-card">
                         <h3 style="color: #ff6b6b;">Search Failed</h3>
-                        <p>Error: ${error.message}</p>
-                        <p style="margin-top: 15px;">This might be due to Twitter API rate limits. Please try again in a few minutes.</p>
+                        <p>Error: ${errorMessage}</p>
+                        <p style="margin-top: 15px;"><strong>Solutions:</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Try the local version: http://162.250.191.81:4001/plasma-hub.html</li>
+                            <li>Wait for API rate limits to reset (15 minutes)</li>
+                            <li>Contact admin to enable HTTPS on the backend</li>
+                        </ul>
                     </div>
                 `;
-                setTimeout(hideStatus, 5000);
+                setTimeout(hideStatus, 8000);
             }
         }
 
@@ -501,9 +635,16 @@
             }
         }
 
-        // Load default search on page load
-        window.onload = function() {
-            quickSearch('plasma stablecoin');
+        // Initialize and test connection on page load
+        window.onload = async function() {
+            await findWorkingEndpoint();
+            
+            // Load default search if connection is working
+            if (workingEndpoint) {
+                setTimeout(() => quickSearch('plasma stablecoin'), 1000);
+            } else {
+                document.getElementById('corsNotice').style.display = 'block';
+            }
         };
     </script>
 </body>
