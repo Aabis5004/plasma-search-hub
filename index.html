@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plasma Search Hub - Find Everything Plasma</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --plasma-primary: #8b5cf6;
+            --plasma-secondary: #3b82f6;
+            --plasma-accent: #06b6d4;
+            --dark-bg: #0a0a0a;
+            --card-bg: rgba(139, 92, 246, 0.05);
+            --border-color: rgba(139, 92, 246, 0.2);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ANIMATED PLASMA BACKGROUND */
+        .plasma-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+                linear-gradient(180deg, #0a0a0a 0%, #111111 100%);
+        }
+
+        .plasma-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            animation: floatOrb 20s ease-in-out infinite;
+        }
+
+        .orb1 {
+            width: 300px;
+            height: 300px;
+            background: rgba(139, 92, 246, 0.3);
+            top: -150px;
+            left: -150px;
+        }
+
+        .orb2 {
+            width: 400px;
+            height: 400px;
+            background: rgba(59, 130, 246, 0.2);
+            bottom: -200px;
+            right: -200px;
+            animation-delay: -7s;
+        }
+
+        .orb3 {
+            width: 250px;
+            height: 250px;
+            background: rgba(6, 182, 212, 0.2);
+            top: 50%;
+            left: 50%;
+            animation-delay: -14s;
+        }
+
+        @keyframes floatOrb {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(100px, -100px) scale(1.1);
+            }
+            66% {
+                transform: translate(-100px, 100px) scale(0.9);
+            }
+        }
+
+        /* LIGHTNING EFFECT */
+        .lightning {
+            position: fixed;
+            top: 0;
+            width: 2px;
+            height: 100vh;
+            background: linear-gradient(180deg, transparent, rgba(139, 92, 246, 0.8), transparent);
+            animation: lightning 8s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes lightning {
+            0% {
+                left: -2px;
+                opacity: 0;
+            }
+            1% {
+                opacity: 1;
+            }
+            2% {
+                opacity: 0;
+            }
+            100% {
+                left: 100%;
+                opacity: 0;
+            }
+        }
+
+        /* HEADER */
+        .header {
+            padding: 2rem;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--plasma-primary), var(--plasma-secondary), var(--plasma-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            animation: logoGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes logoGlow {
+            0%, 100% {
+                filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.5));
+            }
+            50% {
+                filter: drop-shadow(0 0 40px rgba(139, 92, 246, 0.8));
+            }
+        }
+
+        .tagline {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+        }
+
+        /* SEARCH SECTION */
+        .search-section {
+            padding: 3rem 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .search-container {
+            background: rgba(139, 92, 246, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            padding: 0.8rem 2rem;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--plasma-primary), var(--plasma-secondary));
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+        }
+
+        .tab-btn:hover:not(.active) {
+            border-color: var(--plasma-primary);
+            color: white;
+        }
+
+        .search-input-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 1.2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--plasma-primary);
+            background: rgba(139, 92, 246, 0.1);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.2);
+        }
+
+        .search-btn {
+            padding: 1.2rem 3rem;
+            background: linear-gradient(135deg, var(--plasma-primary), var(--plasma-secondary));
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(139, 92, 246, 0.5);
+        }
+
+        .search-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* FILTERS */
+        .filters {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-chip {
+            padding: 0.5rem 1.2rem;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .filter-chip.active {
+            background: var(--plasma-primary);
+            border-color: var(--plasma-primary);
+            color: white;
+        }
+
+        .filter-chip:hover {
+            border-color: var(--plasma-primary);
+        }
+
+        /* STATS SECTION */
+        .stats-section {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            background: rgba(139, 92, 246, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 1.5rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--plasma-primary);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--plasma-primary), var(--plasma-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        /* RESULTS SECTION */
+        .results-section {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .results-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .sort-dropdown {
+            padding: 0.8rem 1.5rem;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .posts-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .post-card {
+            background: rgba(139, 92, 246, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .post-card:hover {
+            transform: translateX(5px);
+            border-color: var(--plasma-primary);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .post-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--plasma-primary), var(--plasma-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 1rem;
+        }
+
+        .post-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .post-meta {
+            flex: 1;
+        }
+
+        .post-username {
+            font-weight: 600;
+            color: var(--plasma-primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .post-time {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        .post-content {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .post-keyword {
+            color: var(--plasma-accent);
+            font-weight: 600;
+        }
+
+        .post-stats {
+            display: flex;
+            gap: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(139, 92, 246, 0.1);
+        }
+
+        .post-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .post-stat-icon {
+            color: var(--plasma-primary);
+        }
+
+        /* LOADING STATE */
+        .loading-container {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(139, 92, 246, 0.1);
+            border-top-color: var(--plasma-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.1rem;
+        }
+
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .empty-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--plasma-primary);
+        }
+
+        .empty-text {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* TRENDING SIDEBAR */
+        .trending-sidebar {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 300px;
+            background: rgba(139, 92, 246, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .trending-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--plasma-primary);
+        }
+
+        .trending-item {
+            padding: 0.8rem;
+            margin-bottom: 0.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .trending-item:hover {
+            background: rgba(139, 92, 246, 0.1);
+            transform: translateX(-5px);
+        }
+
+        .trending-rank {
+            color: var(--plasma-accent);
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1400px) {
+            .trending-sidebar {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2rem;
+            }
+
+            .search-tabs {
+                flex-direction: column;
+            }
+
+            .search-input-group {
+                flex-direction: column;
+            }
+
+            .stats-section {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                justify-content: flex-start;
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                padding-bottom: 0.5rem;
+            }
+        }
+
+        /* CONNECTION STATUS */
+        .connection-status {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            padding: 1rem 1.5rem;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 100;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.connected {
+            background: #10b981;
+        }
+
+        .status-dot.disconnected {
+            background: #ef4444;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- PLASMA BACKGROUND -->
+    <div class="plasma-bg">
+        <div class="plasma-orb orb1"></div>
+        <div class="plasma-orb orb2"></div>
+        <div class="plasma-orb orb3"></div>
+        <div class="lightning"></div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="header">
+        <h1 class="logo">⚡ PLASMA SEARCH HUB</h1>
+        <p class="tagline">Find Everything About Plasma & Stable in the Community</p>
+    </header>
+
+    <!-- SEARCH SECTION -->
+    <section class="search-section">
+        <div class="search-container">
+            <!-- SEARCH TABS -->
+            <div class="search-tabs">
+                <button class="tab-btn active" onclick="switchTab('user')">Search by User</button>
+                <button class="tab-btn" onclick="switchTab('keyword')">Search by Keyword</button>
+                <button class="tab-btn" onclick="switchTab('trending')">Trending</button>
+            </div>
+
+            <!-- USER SEARCH -->
+            <div id="userSearch" class="search-panel">
+                <div class="search-input-group">
+                    <input type="text" class="search-input" id="userInput" placeholder="Enter username (e.g., @username or username)">
+                    <button class="search-btn" onclick="searchByUser()">Search User</button>
+                </div>
+            </div>
+
+            <!-- KEYWORD SEARCH -->
+            <div id="keywordSearch" class="search-panel" style="display: none;">
+                <div class="search-input-group">
+                    <input type="text" class="search-input" id="keywordInput" placeholder="Enter keywords (e.g., Plasma, Stable, Trillion)">
+                    <button class="search-btn" onclick="searchByKeyword()">Search Posts</button>
+                </div>
+            </div>
+
+            <!-- TRENDING -->
+            <div id="trendingSearch" class="search-panel" style="display: none;">
+                <div style="text-align: center; padding: 2rem;">
+                    <button class="search-btn" onclick="loadTrending()">Load Trending Posts</button>
+                </div>
+            </div>
+
+            <!-- FILTERS -->
+            <div class="filters">
+                <div class="filter-chip active" onclick="toggleFilter(this, 'all')">All Posts</div>
+                <div class="filter-chip" onclick="toggleFilter(this, 'plasma')">Plasma Only</div>
+                <div class="filter-chip" onclick="toggleFilter(this, 'stable')">Stable Only</div>
+                <div class="filter-chip" onclick="toggleFilter(this, 'verified')">Verified Users</div>
+                <div class="filter-chip" onclick="toggleFilter(this, 'recent')">Last 24h</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS SECTION -->
+    <section class="stats-section" id="statsSection" style="display: none;">
+        <div class="stat-card">
+            <div class="stat-number" id="totalPosts">0</div>
+            <div class="stat-label">Total Posts Found</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="plasmaCount">0</div>
+            <div class="stat-label">Plasma Mentions</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="stableCount">0</div>
+            <div class="stat-label">Stable Mentions</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="engagementCount">0</div>
+            <div class="stat-label">Total Engagement</div>
+        </div>
+    </section>
+
+    <!-- RESULTS SECTION -->
+    <section class="results-section" id="resultsSection" style="display: none;">
+        <div class="results-header">
+            <h2 class="results-title">Search Results</h2>
+            <select class="sort-dropdown" onchange="sortResults(this.value)">
+                <option value="recent">Most Recent</option>
+                <option value="engagement">Most Engagement</option>
+                <option value="likes">Most Likes</option>
+                <option value="retweets">Most Retweets</option>
+            </select>
+        </div>
+        <div class="posts-grid" id="postsGrid">
+            <!-- Posts will be dynamically added here -->
+        </div>
+    </section>
+
+    <!-- LOADING STATE -->
+    <div class="loading-container" id="loadingContainer" style="display: none;">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Searching the Plasma universe...</div>
+    </div>
+
+    <!-- EMPTY STATE -->
+    <div class="empty-state" id="emptyState" style="display: none;">
+        <div class="empty-icon">🔍</div>
+        <div class="empty-title">No Results Found</div>
+        <div class="empty-text">Try searching with different keywords or username</div>
+    </div>
+
+    <!-- TRENDING SIDEBAR -->
+    <div class="trending-sidebar">
+        <h3 class="trending-title">🔥 Trending Users</h3>
+        <div id="trendingUsers">
+            <div class="trending-item">
+                <span class="trending-rank">#1</span>
+                <span>@plasmawhale</span>
+            </div>
+            <div class="trending-item">
+                <span class="trending-rank">#2</span>
+                <span>@stabletrader</span>
+            </div>
+            <div class="trending-item">
+                <span class="trending-rank">#3</span>
+                <span>@trillionaire</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONNECTION STATUS -->
+    <div class="connection-status">
+        <div class="status-dot disconnected" id="statusDot"></div>
+        <span id="statusText">Connecting...</span>
+    </div>
+
+    <script>
+        // Configuration
+        const API_BASE = const API_BASE = 'https://seismicwall.duckdns.org/api'; // UPDATE THIS WITH YOUR BACKEND URL
+        let currentTab = 'user';
+        let currentFilter = 'all';
+        let allPosts = [];
+        let isConnected = false;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkConnection();
+            setupEnterKey();
+        });
+
+        // Check backend connection
+        async function checkConnection() {
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                isConnected = response.ok;
+            } catch (error) {
+                isConnected = false;
+            }
+            updateConnectionStatus();
+        }
+
+        function updateConnectionStatus() {
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+            
+            if (isConnected) {
+                statusDot.className = 'status-dot connected';
+                statusText.textContent = 'Connected to Backend';
+            } else {
+                statusDot.className = 'status-dot disconnected';
+                statusText.textContent = 'Demo Mode';
+            }
+        }
+
+        // Tab switching
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Hide all panels
+            document.getElementById('userSearch').style.display = 'none';
+            document.getElementById('keywordSearch').style.display = 'none';
+            document.getElementById('trendingSearch').style.display = 'none';
+            
+            // Show selected panel
+            if (tab === 'user') {
+                document.getElementById('userSearch').style.display = 'block';
+            } else if (tab === 'keyword') {
+                document.getElementById('keywordSearch').style.display = 'block';
+            } else if (tab === 'trending') {
+                document.getElementById('trendingSearch').style.display = 'block';
+            }
+            
+            // Clear results
+            hideAllSections();
+        }
+
+        // Filter toggle
+        function toggleFilter(element, filter) {
+            // Remove active from all filters
+            document.querySelectorAll('.filter-chip').forEach(chip => {
+                chip.classList.remove('active');
+            });
+            
+            // Add active to clicked filter
+            element.classList.add('active');
+            currentFilter = filter;
+            
+            // Re-filter results if we have any
+            if (allPosts.length > 0) {
+                filterPosts();
+            }
+        }
+
+        // Search by user
+        async function searchByUser() {
+            const username = document.getElementById('userInput').value.trim();
+            if (!username) {
+                alert('Please enter a username');
+                return;
+            }
+            
+            showLoading();
+            
+            try {
+                if (isConnected) {
+                    // Real API call
+                    const response = await fetch(`${API_BASE}/search/user`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ 
+                            username: username.replace('@', ''),
+                            keywords: ['plasma', 'stable', 'trillion']
+                        })
+                    });
+                    
+                    if (!response.ok) throw new Error('Search failed');
+                    
+                    const data = await response.json();
+                    allPosts = data.posts || [];
+                } else {
+                    // Demo data
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    allPosts = generateDemoPosts(username);
+                }
+                
+                displayResults();
+            } catch (error) {
+                console.error('Search error:', error);
+                showError('Failed to search. Please try again.');
+            }
+        }
+
+        // Search by keyword
+        async function searchByKeyword() {
+            const keywords = document.getElementById('keywordInput').value.trim();
+            if (!keywords) {
+                alert('Please enter keywords');
+                return;
+            }
+            
+            showLoading();
+            
+            try {
+                if (isConnected) {
+                    // Real API call
+                    const response = await fetch(`${API_BASE}/search/keyword`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ 
+                            keywords: keywords.split(' ')
+                        })
+                    });
+                    
+                    if (!response.ok) throw new Error('Search failed');
+                    
+                    const data = await response.json();
+                    allPosts = data.posts || [];
+                } else {
+                    // Demo data
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    allPosts = generateDemoKeywordPosts(keywords);
+                }
+                
+                displayResults();
+            } catch (error) {
+                console.error('Search error:', error);
+                showError('Failed to search. Please try again.');
+            }
+        }
+
+        // Load trending posts
+        async function loadTrending() {
+            showLoading();
+            
+            try {
+                if (isConnected) {
+                    // Real API call
+                    const response = await fetch(`${API_BASE}/trending`);
+                    if (!response.ok) throw new Error('Failed to load trending');
+                    
+                    const data = await response.json();
+                    allPosts = data.posts || [];
+                } else {
+                    // Demo data
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    allPosts = generateTrendingPosts();
+                }
+                
+                displayResults();
+            } catch (error) {
+                console.error('Trending error:', error);
+                showError('Failed to load trending posts.');
+            }
+        }
+
+        // Display results
+        function displayResults() {
+            hideAllSections();
+            
+            if (allPosts.length === 0) {
+                document.getElementById('emptyState').style.display = 'block';
+                return;
+            }
+            
+            // Show stats and results sections
+            document.getElementById('statsSection').style.display = 'grid';
+            document.getElementById('resultsSection').style.display = 'block';
+            
+            // Update stats
+            updateStats();
+            
+            // Filter and display posts
+            filterPosts();
+        }
+
+        // Filter posts based on current filter
+        function filterPosts() {
+            let filteredPosts = [...allPosts];
+            
+            if (currentFilter === 'plasma') {
+                filteredPosts = filteredPosts.filter(post => 
+                    post.content.toLowerCase().includes('plasma')
+                );
+            } else if (currentFilter === 'stable') {
+                filteredPosts = filteredPosts.filter(post => 
+                    post.content.toLowerCase().includes('stable')
+                );
+            } else if (currentFilter === 'verified') {
+                filteredPosts = filteredPosts.filter(post => post.verified);
+            } else if (currentFilter === 'recent') {
+                const oneDayAgo = Date.now() - (24 * 60 * 60 * 1000);
+                filteredPosts = filteredPosts.filter(post => 
+                    new Date(post.timestamp).getTime() > oneDayAgo
+                );
+            }
+            
+            renderPosts(filteredPosts);
+        }
+
+        // Render posts to grid
+        function renderPosts(posts) {
+            const grid = document.getElementById('postsGrid');
+            grid.innerHTML = '';
+            
+            posts.forEach(post => {
+                const card = createPostCard(post);
+                grid.appendChild(card);
+            });
+        }
+
+        // Create post card element
+        function createPostCard(post) {
+            const card = document.createElement('div');
+            card.className = 'post-card';
+            
+            // Highlight keywords
+            let content = post.content;
+            ['plasma', 'stable', 'trillion'].forEach(keyword => {
+                const regex = new RegExp(`(${keyword})`, 'gi');
+                content = content.replace(regex, '<span class="post-keyword">$1</span>');
+            });
+            
+            card.innerHTML = `
+                <div class="post-header">
+                    <div class="post-avatar">
+                        ${post.avatar ? `<img src="${post.avatar}" alt="${post.username}">` : post.username.charAt(0).toUpperCase()}
+                    </div>
+                    <div class="post-meta">
+                        <div class="post-username">${post.username}</div>
+                        <div class="post-time">${formatTime(post.timestamp)}</div>
+                    </div>
+                </div>
+                <div class="post-content">${content}</div>
+                <div class="post-stats">
+                    <div class="post-stat">
+                        <span class="post-stat-icon">❤️</span>
+                        <span>${formatNumber(post.likes)}</span>
+                    </div>
+                    <div class="post-stat">
+                        <span class="post-stat-icon">🔄</span>
+                        <span>${formatNumber(post.retweets)}</span>
+                    </div>
+                    <div class="post-stat">
+                        <span class="post-stat-icon">💬</span>
+                        <span>${formatNumber(post.replies)}</span>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Update statistics
+        function updateStats() {
+            const plasmaCount = allPosts.filter(p => p.content.toLowerCase().includes('plasma')).length;
+            const stableCount = allPosts.filter(p => p.content.toLowerCase().includes('stable')).length;
+            const totalEngagement = allPosts.reduce((sum, p) => sum + p.likes + p.retweets + p.replies, 0);
+            
+            document.getElementById('totalPosts').textContent = allPosts.length;
+            document.getElementById('plasmaCount').textContent = plasmaCount;
+            document.getElementById('stableCount').textContent = stableCount;
+            document.getElementById('engagementCount').textContent = formatNumber(totalEngagement);
+        }
+
+        // Sort results
+        function sortResults(sortBy) {
+            let sortedPosts = [...allPosts];
+            
+            switch(sortBy) {
+                case 'recent':
+                    sortedPosts.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                    break;
+                case 'engagement':
+                    sortedPosts.sort((a, b) => 
+                        (b.likes + b.retweets + b.replies) - (a.likes + a.retweets + a.replies)
+                    );
+                    break;
+                case 'likes':
+                    sortedPosts.sort((a, b) => b.likes - a.likes);
+                    break;
+                case 'retweets':
+                    sortedPosts.sort((a, b) => b.retweets - a.retweets);
+                    break;
+            }
+            
+            allPosts = sortedPosts;
+            filterPosts();
+        }
+
+        // Utility functions
+        function showLoading() {
+            hideAllSections();
+            document.getElementById('loadingContainer').style.display = 'block';
+        }
+
+        function hideAllSections() {
+            document.getElementById('statsSection').style.display = 'none';
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('loadingContainer').style.display = 'none';
+            document.getElementById('emptyState').style.display = 'none';
+        }
+
+        function showError(message) {
+            hideAllSections();
+            const emptyState = document.getElementById('emptyState');
+            emptyState.querySelector('.empty-title').textContent = 'Error';
+            emptyState.querySelector('.empty-text').textContent = message;
+            emptyState.style.display = 'block';
+        }
+
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diff = now - date;
+            
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+            
+            if (minutes < 60) return `${minutes}m ago`;
+            if (hours < 24) return `${hours}h ago`;
+            if (days < 7) return `${days}d ago`;
+            
+            return date.toLocaleDateString();
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+
+        // Setup enter key for search
+        function setupEnterKey() {
+            document.getElementById('userInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') searchByUser();
+            });
+            
+            document.getElementById('keywordInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') searchByKeyword();
+            });
+        }
+
+        // Demo data generators
+        function generateDemoPosts(username) {
+            const posts = [];
+            const contents = [
+                `Just staked my $PLASMA tokens! The future of DeFi is here 🚀 #Plasma #Stable`,
+                `$STABLE is holding strong during this market volatility. Plasma ecosystem proving its worth!`,
+                `Reached my first trillion $PLASMA! Who else is accumulating? 💎🙌`,
+                `The Plasma community is amazing! Stable gains every day 📈`,
+                `New to Plasma but already loving the stable returns. This is the way!`,
+                `Plasma protocol update looking bullish! Stable yields incoming 🔥`
+            ];
+            
+            for (let i = 0; i < 6; i++) {
+                posts.push({
+                    id: i + 1,
+                    username: username.replace('@', ''),
+                    avatar: null,
+                    content: contents[i],
+                    timestamp: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000),
+                    likes: Math.floor(Math.random() * 1000),
+                    retweets: Math.floor(Math.random() * 500),
+                    replies: Math.floor(Math.random() * 100),
+                    verified: Math.random() > 0.5
+                });
+            }
+            
+            return posts;
+        }
+
+        function generateDemoKeywordPosts(keywords) {
+            const posts = [];
+            const usernames = ['@plasmawhale', '@stableking', '@trillionaire', '@defi_master', '@crypto_guru'];
+            
+            for (let i = 0; i < 10; i++) {
+                posts.push({
+                    id: i + 1,
+                    username: usernames[Math.floor(Math.random() * usernames.length)],
+                    avatar: null,
+                    content: `Interesting analysis on ${keywords}. The Plasma ecosystem continues to grow! #DeFi`,
+                    timestamp: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000),
+                    likes: Math.floor(Math.random() * 5000),
+                    retweets: Math.floor(Math.random() * 2000),
+                    replies: Math.floor(Math.random() * 500),
+                    verified: Math.random() > 0.3
+                });
+            }
+            
+            return posts;
+        }
+
+        function generateTrendingPosts() {
+            const posts = [];
+            const trending = [
+                { user: '@plasmawhale', content: 'BREAKING: Plasma hits new ATH! Stable yields for everyone! 🚀' },
+                { user: '@defi_news', content: 'Plasma protocol surpasses $1 trillion in TVL. Stable growth continues!' },
+                { user: '@crypto_insider', content: 'Why Plasma is the future of DeFi. Thread 🧵👇' },
+                { user: '@stablegenius', content: 'My Plasma portfolio just hit 7 figures. Thank you Stable community!' },
+                { user: '@trillion_club', content: 'Welcome to the trillion club! $PLASMA holders unite! 💪' }
+            ];
+            
+            trending.forEach((item, i) => {
+                posts.push({
+                    id: i + 1,
+                    username: item.user,
+                    avatar: null,
+                    content: item.content,
+                    timestamp: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000),
+                    likes: Math.floor(Math.random() * 10000) + 5000,
+                    retweets: Math.floor(Math.random() * 5000) + 2000,
+                    replies: Math.floor(Math.random() * 1000) + 500,
+                    verified: true
+                });
+            });
+            
+            return posts;
+        }
+    </script>
+</body>
+</html>
