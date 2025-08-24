@@ -3,1142 +3,385 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plasma Search Hub - Find Everything Plasma</title>
+    <title>Plasma Search Hub - Find Everything About Plasma Stablecoin</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        :root {
-            --plasma-primary: #8b5cf6;
-            --plasma-secondary: #3b82f6;
-            --plasma-accent: #06b6d4;
-            --dark-bg: #0a0a0a;
-            --card-bg: rgba(139, 92, 246, 0.05);
-            --border-color: rgba(139, 92, 246, 0.2);
-        }
-
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--dark-bg);
-            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            overflow-x: hidden;
+            color: #333;
         }
 
-        /* ANIMATED PLASMA BACKGROUND */
-        .plasma-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 20%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
-                linear-gradient(180deg, #0a0a0a 0%, #111111 100%);
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
-        .plasma-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(40px);
-            animation: floatOrb 20s ease-in-out infinite;
-        }
-
-        .orb1 {
-            width: 300px;
-            height: 300px;
-            background: rgba(139, 92, 246, 0.3);
-            top: -150px;
-            left: -150px;
-        }
-
-        .orb2 {
-            width: 400px;
-            height: 400px;
-            background: rgba(59, 130, 246, 0.2);
-            bottom: -200px;
-            right: -200px;
-            animation-delay: -7s;
-        }
-
-        .orb3 {
-            width: 250px;
-            height: 250px;
-            background: rgba(6, 182, 212, 0.2);
-            top: 50%;
-            left: 50%;
-            animation-delay: -14s;
-        }
-
-        @keyframes floatOrb {
-            0%, 100% {
-                transform: translate(0, 0) scale(1);
-            }
-            33% {
-                transform: translate(100px, -100px) scale(1.1);
-            }
-            66% {
-                transform: translate(-100px, 100px) scale(0.9);
-            }
-        }
-
-        /* LIGHTNING EFFECT */
-        .lightning {
-            position: fixed;
-            top: 0;
-            width: 2px;
-            height: 100vh;
-            background: linear-gradient(180deg, transparent, rgba(139, 92, 246, 0.8), transparent);
-            animation: lightning 8s linear infinite;
-            z-index: -1;
-        }
-
-        @keyframes lightning {
-            0% {
-                left: -2px;
-                opacity: 0;
-            }
-            1% {
-                opacity: 1;
-            }
-            2% {
-                opacity: 0;
-            }
-            100% {
-                left: 100%;
-                opacity: 0;
-            }
-        }
-
-        /* HEADER */
         .header {
-            padding: 2rem;
             text-align: center;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 40px;
+            padding: 40px 0;
         }
 
-        .logo {
-            font-family: 'Space Grotesk', monospace;
-            font-size: 3rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--plasma-primary), var(--plasma-secondary), var(--plasma-accent));
+        .header h1 {
+            color: white;
+            font-size: 3.5em;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #ff6b6b, #ffa726, #42e695);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 0.5rem;
-            animation: logoGlow 3s ease-in-out infinite;
         }
 
-        @keyframes logoGlow {
-            0%, 100% {
-                filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.5));
-            }
-            50% {
-                filter: drop-shadow(0 0 40px rgba(139, 92, 246, 0.8));
-            }
+        .header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.3em;
+            margin-bottom: 30px;
         }
 
-        .tagline {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 1.1rem;
-        }
-
-        /* SEARCH SECTION */
         .search-section {
-            padding: 3rem 2rem;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .search-container {
-            background: rgba(139, 92, 246, 0.05);
-            border: 1px solid var(--border-color);
+            background: rgba(255,255,255,0.95);
             border-radius: 20px;
-            padding: 2rem;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
             backdrop-filter: blur(10px);
         }
 
-        .search-tabs {
+        .quick-search {
             display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            justify-content: center;
-        }
-
-        .tab-btn {
-            padding: 0.8rem 2rem;
-            background: transparent;
-            border: 1px solid var(--border-color);
-            border-radius: 50px;
-            color: rgba(255, 255, 255, 0.7);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-        }
-
-        .tab-btn.active {
-            background: linear-gradient(135deg, var(--plasma-primary), var(--plasma-secondary));
-            border-color: transparent;
-            color: white;
-            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
-        }
-
-        .tab-btn:hover:not(.active) {
-            border-color: var(--plasma-primary);
-            color: white;
-        }
-
-        .search-input-group {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .search-input {
-            flex: 1;
-            padding: 1.2rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-color);
-            border-radius: 15px;
-            color: white;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .search-input::placeholder {
-            color: rgba(255, 255, 255, 0.4);
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: var(--plasma-primary);
-            background: rgba(139, 92, 246, 0.1);
-            box-shadow: 0 0 30px rgba(139, 92, 246, 0.2);
-        }
-
-        .search-btn {
-            padding: 1.2rem 3rem;
-            background: linear-gradient(135deg, var(--plasma-primary), var(--plasma-secondary));
-            border: none;
-            border-radius: 15px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
-        }
-
-        .search-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(139, 92, 246, 0.5);
-        }
-
-        .search-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* FILTERS */
-        .filters {
-            display: flex;
-            gap: 1rem;
+            gap: 15px;
+            margin-bottom: 25px;
             flex-wrap: wrap;
             justify-content: center;
         }
 
-        .filter-chip {
-            padding: 0.5rem 1.2rem;
-            background: rgba(139, 92, 246, 0.1);
-            border: 1px solid var(--border-color);
-            border-radius: 50px;
-            color: rgba(255, 255, 255, 0.8);
+        .quick-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
             cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
             transition: all 0.3s ease;
-            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .filter-chip.active {
-            background: var(--plasma-primary);
-            border-color: var(--plasma-primary);
+        .quick-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            background: linear-gradient(45deg, #764ba2, #667eea);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            font-size: 1.1em;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-btn {
+            background: linear-gradient(45deg, #42e695, #3bb78f);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background: linear-gradient(45deg, #3bb78f, #42e695);
+            transform: translateY(-2px);
+        }
+
+        .status {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .status.loading {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        .status.success {
+            background: linear-gradient(90deg, #42e695, #3bb78f);
             color: white;
         }
 
-        .filter-chip:hover {
-            border-color: var(--plasma-primary);
+        .status.error {
+            background: linear-gradient(90deg, #ff6b6b, #ff5252);
+            color: white;
         }
 
-        /* STATS SECTION */
-        .stats-section {
-            padding: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .results {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
+            gap: 25px;
         }
 
-        .stat-card {
-            background: rgba(139, 92, 246, 0.05);
-            border: 1px solid var(--border-color);
+        .tweet-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 1px solid #f0f0f0;
+        }
+
+        .tweet-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid #667eea;
+        }
+
+        .author-details h3 {
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 1.2em;
+        }
+
+        .author-username {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .verified {
+            color: #1da1f2;
+            margin-left: 5px;
+        }
+
+        .tweet-text {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .tweet-metrics {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .metric {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 15px;
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
             border-radius: 20px;
-            padding: 1.5rem;
-            text-align: center;
-            backdrop-filter: blur(10px);
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .metric.likes { background: linear-gradient(45deg, #ff6b6b, #ff5252); color: white; }
+        .metric.retweets { background: linear-gradient(45deg, #42e695, #3bb78f); color: white; }
+        .metric.replies { background: linear-gradient(45deg, #667eea, #764ba2); color: white; }
+
+        .tweet-date {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .tweet-link {
+            display: inline-block;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
             transition: all 0.3s ease;
         }
 
-        .stat-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--plasma-primary);
-            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+        .tweet-link:hover {
+            background: linear-gradient(45deg, #764ba2, #667eea);
+            transform: translateY(-1px);
+        }
+
+        .stats-bar {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .stat-item {
+            flex: 1;
+            min-width: 150px;
         }
 
         .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--plasma-primary), var(--plasma-secondary));
+            font-size: 2em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #667eea, #764ba2);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
         .stat-label {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-        }
-
-        /* RESULTS SECTION */
-        .results-section {
-            padding: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .results-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .results-title {
-            font-size: 1.5rem;
+            color: #666;
             font-weight: 600;
-        }
-
-        .sort-dropdown {
-            padding: 0.8rem 1.5rem;
-            background: rgba(139, 92, 246, 0.1);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            color: white;
-            cursor: pointer;
-        }
-
-        .posts-grid {
-            display: grid;
-            gap: 1.5rem;
-        }
-
-        .post-card {
-            background: rgba(139, 92, 246, 0.05);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 1.5rem;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-            animation: fadeInUp 0.5s ease-out;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .post-card:hover {
-            transform: translateX(5px);
-            border-color: var(--plasma-primary);
-            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
-        }
-
-        .post-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .post-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--plasma-primary), var(--plasma-secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            margin-right: 1rem;
-        }
-
-        .post-avatar img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .post-meta {
-            flex: 1;
-        }
-
-        .post-username {
-            font-weight: 600;
-            color: var(--plasma-primary);
-            margin-bottom: 0.2rem;
-        }
-
-        .post-time {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.9rem;
-        }
-
-        .post-content {
-            color: rgba(255, 255, 255, 0.9);
-            line-height: 1.6;
-            margin-bottom: 1rem;
-        }
-
-        .post-keyword {
-            color: var(--plasma-accent);
-            font-weight: 600;
-        }
-
-        .post-stats {
-            display: flex;
-            gap: 2rem;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(139, 92, 246, 0.1);
-        }
-
-        .post-stat {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.9rem;
-        }
-
-        .post-stat-icon {
-            color: var(--plasma-primary);
-        }
-
-        /* LOADING STATE */
-        .loading-container {
-            text-align: center;
-            padding: 3rem;
-        }
-
-        .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 3px solid rgba(139, 92, 246, 0.1);
-            border-top-color: var(--plasma-primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 1.1rem;
-        }
-
-        /* EMPTY STATE */
-        .empty-state {
-            text-align: center;
-            padding: 4rem 2rem;
-        }
-
-        .empty-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-        }
-
-        .empty-title {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: var(--plasma-primary);
-        }
-
-        .empty-text {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        /* TRENDING SIDEBAR */
-        .trending-sidebar {
-            position: fixed;
-            right: 2rem;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 300px;
-            background: rgba(139, 92, 246, 0.05);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 1.5rem;
-            backdrop-filter: blur(10px);
-            max-height: 500px;
-            overflow-y: auto;
-        }
-
-        .trending-title {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-            color: var(--plasma-primary);
-        }
-
-        .trending-item {
-            padding: 0.8rem;
-            margin-bottom: 0.5rem;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .trending-item:hover {
-            background: rgba(139, 92, 246, 0.1);
-            transform: translateX(-5px);
-        }
-
-        .trending-rank {
-            color: var(--plasma-accent);
-            font-weight: 600;
-            margin-right: 0.5rem;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 1400px) {
-            .trending-sidebar {
-                display: none;
-            }
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9em;
         }
 
         @media (max-width: 768px) {
-            .logo {
-                font-size: 2rem;
+            .header h1 {
+                font-size: 2.5em;
             }
-
-            .search-tabs {
+            
+            .search-box {
                 flex-direction: column;
             }
-
-            .search-input-group {
-                flex-direction: column;
+            
+            .quick-search {
+                justify-content: center;
             }
-
-            .stats-section {
-                grid-template-columns: 1fr;
-            }
-
-            .filters {
-                justify-content: flex-start;
-                overflow-x: auto;
-                flex-wrap: nowrap;
-                padding-bottom: 0.5rem;
-            }
-        }
-
-        /* CONNECTION STATUS */
-        .connection-status {
-            position: fixed;
-            bottom: 2rem;
-            left: 2rem;
-            padding: 1rem 1.5rem;
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid var(--border-color);
-            border-radius: 50px;
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            z-index: 100;
-        }
-
-        .status-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        .status-dot.connected {
-            background: #10b981;
-        }
-
-        .status-dot.disconnected {
-            background: #ef4444;
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.5;
+            
+            .quick-btn {
+                font-size: 0.9em;
+                padding: 10px 20px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- PLASMA BACKGROUND -->
-    <div class="plasma-bg">
-        <div class="plasma-orb orb1"></div>
-        <div class="plasma-orb orb2"></div>
-        <div class="plasma-orb orb3"></div>
-        <div class="lightning"></div>
-    </div>
+    <div class="container">
+        <div class="header">
+            <h1>🔥 Plasma Search Hub</h1>
+            <p>Find Everything About Plasma Stablecoin, XPL & Trillions on Twitter</p>
+        </div>
 
-    <!-- HEADER -->
-    <header class="header">
-        <h1 class="logo">⚡ PLASMA SEARCH HUB</h1>
-        <p class="tagline">Find Everything About Plasma & Stable in the Community</p>
-    </header>
-
-    <!-- SEARCH SECTION -->
-    <section class="search-section">
-        <div class="search-container">
-            <!-- SEARCH TABS -->
-            <div class="search-tabs">
-                <button class="tab-btn active" data-tab="user">Search by User</button>
-                <button class="tab-btn" data-tab="keyword">Search by Keyword</button>
-                <button class="tab-btn" data-tab="trending">Trending</button>
+        <div class="search-section">
+            <div class="quick-search">
+                <button class="quick-btn" onclick="quickSearch('plasma stablecoin')">🪙 Plasma Stablecoin</button>
+                <button class="quick-btn" onclick="quickSearch('XPL token')">💎 XPL Token</button>
+                <button class="quick-btn" onclick="quickSearch('trillions crypto')">💰 Trillions</button>
+                <button class="quick-btn" onclick="quickSearch('plasma blockchain')">⛓️ Plasma Chain</button>
             </div>
-
-            <!-- USER SEARCH -->
-            <div id="userSearch" class="search-panel">
-                <div class="search-input-group">
-                    <input type="text" class="search-input" id="userInput" placeholder="Enter username (e.g., @username or username)">
-                    <button class="search-btn" id="searchUserBtn">Search User</button>
-                </div>
-            </div>
-
-            <!-- KEYWORD SEARCH -->
-            <div id="keywordSearch" class="search-panel" style="display: none;">
-                <div class="search-input-group">
-                    <input type="text" class="search-input" id="keywordInput" placeholder="Enter keywords (e.g., Plasma, Stable, Trillion)">
-                    <button class="search-btn" id="searchKeywordBtn">Search Posts</button>
-                </div>
-            </div>
-
-            <!-- TRENDING -->
-            <div id="trendingSearch" class="search-panel" style="display: none;">
-                <div style="text-align: center; padding: 2rem;">
-                    <button class="search-btn" id="loadTrendingBtn">Load Trending Posts</button>
-                </div>
-            </div>
-
-            <!-- FILTERS -->
-            <div class="filters">
-                <div class="filter-chip active" data-filter="all">All Posts</div>
-                <div class="filter-chip" data-filter="plasma">Plasma Only</div>
-                <div class="filter-chip" data-filter="stable">Stable Only</div>
-                <div class="filter-chip" data-filter="verified">Verified Users</div>
-                <div class="filter-chip" data-filter="recent">Last 24h</div>
+            
+            <div class="search-box">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="search-input" 
+                    placeholder="Search for plasma, XPL, trillions, or any crypto topic..."
+                    onkeypress="handleEnterKey(event)"
+                >
+                <button class="search-btn" onclick="performSearch()">🔍 Search Twitter</button>
             </div>
         </div>
-    </section>
 
-    <!-- STATS SECTION -->
-    <section class="stats-section" id="statsSection" style="display: none;">
-        <div class="stat-card">
-            <div class="stat-number" id="totalPosts">0</div>
-            <div class="stat-label">Total Posts Found</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number" id="plasmaCount">0</div>
-            <div class="stat-label">Plasma Mentions</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number" id="stableCount">0</div>
-            <div class="stat-label">Stable Mentions</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number" id="engagementCount">0</div>
-            <div class="stat-label">Total Engagement</div>
-        </div>
-    </section>
+        <div id="status" class="status" style="display: none;"></div>
 
-    <!-- RESULTS SECTION -->
-    <section class="results-section" id="resultsSection" style="display: none;">
-        <div class="results-header">
-            <h2 class="results-title">Search Results</h2>
-            <select class="sort-dropdown" id="sortDropdown">
-                <option value="recent">Most Recent</option>
-                <option value="engagement">Most Engagement</option>
-                <option value="likes">Most Likes</option>
-                <option value="retweets">Most Retweets</option>
-            </select>
-        </div>
-        <div class="posts-grid" id="postsGrid">
-            <!-- Posts will be dynamically added here -->
-        </div>
-    </section>
-
-    <!-- LOADING STATE -->
-    <div class="loading-container" id="loadingContainer" style="display: none;">
-        <div class="loading-spinner"></div>
-        <div class="loading-text">Searching the Plasma universe...</div>
-    </div>
-
-    <!-- EMPTY STATE -->
-    <div class="empty-state" id="emptyState" style="display: none;">
-        <div class="empty-icon">🔍</div>
-        <div class="empty-title">No Results Found</div>
-        <div class="empty-text">Try searching with different keywords or username</div>
-    </div>
-
-    <!-- TRENDING SIDEBAR -->
-    <div class="trending-sidebar">
-        <h3 class="trending-title">🔥 Trending Users</h3>
-        <div id="trendingUsers">
-            <div class="trending-item">
-                <span class="trending-rank">#1</span>
-                <span>@plasmawhale</span>
+        <div id="statsBar" class="stats-bar" style="display: none;">
+            <div class="stat-item">
+                <div id="totalTweets" class="stat-number">0</div>
+                <div class="stat-label">Tweets Found</div>
             </div>
-            <div class="trending-item">
-                <span class="trending-rank">#2</span>
-                <span>@stabletrader</span>
+            <div class="stat-item">
+                <div id="totalLikes" class="stat-number">0</div>
+                <div class="stat-label">Total Likes</div>
             </div>
-            <div class="trending-item">
-                <span class="trending-rank">#3</span>
-                <span>@trillionaire</span>
+            <div class="stat-item">
+                <div id="totalRetweets" class="stat-number">0</div>
+                <div class="stat-label">Total Retweets</div>
             </div>
         </div>
-    </div>
 
-    <!-- CONNECTION STATUS -->
-    <div class="connection-status">
-        <div class="status-dot disconnected" id="statusDot"></div>
-        <span id="statusText">Connecting...</span>
+        <div id="results" class="results"></div>
     </div>
 
     <script>
-        // Configuration - UPDATE THIS WITH YOUR BACKEND URL
-        const API_BASE = 'https://seismicwall.duckdns.org/api';
-        let currentTab = 'user';
-        let currentFilter = 'all';
-        let allPosts = [];
-        let isConnected = false;
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            checkConnection();
-            setupEventListeners();
-        });
-
-        // Setup all event listeners
-        function setupEventListeners() {
-            // Tab buttons
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    switchTab(this.getAttribute('data-tab'));
-                });
-            });
-
-            // Search buttons
-            document.getElementById('searchUserBtn').addEventListener('click', searchByUser);
-            document.getElementById('searchKeywordBtn').addEventListener('click', searchByKeyword);
-            document.getElementById('loadTrendingBtn').addEventListener('click', loadTrending);
-
-            // Filter chips
-            document.querySelectorAll('.filter-chip').forEach(chip => {
-                chip.addEventListener('click', function() {
-                    toggleFilter(this, this.getAttribute('data-filter'));
-                });
-            });
-
-            // Sort dropdown
-            document.getElementById('sortDropdown').addEventListener('change', function() {
-                sortResults(this.value);
-            });
-
-            // Enter key for search
-            document.getElementById('userInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') searchByUser();
-            });
-            
-            document.getElementById('keywordInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') searchByKeyword();
-            });
+        const API_BASE_URL = 'http://162.250.191.81:4001';
+        
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            status.style.display = 'block';
         }
 
-        // Check backend connection
-        async function checkConnection() {
-            try {
-                const response = await fetch(`${API_BASE}/health`);
-                isConnected = response.ok;
-            } catch (error) {
-                isConnected = false;
-            }
-            updateConnectionStatus();
+        function hideStatus() {
+            document.getElementById('status').style.display = 'none';
         }
 
-        function updateConnectionStatus() {
-            const statusDot = document.getElementById('statusDot');
-            const statusText = document.getElementById('statusText');
-            
-            if (isConnected) {
-                statusDot.className = 'status-dot connected';
-                statusText.textContent = 'Connected to Backend';
-            } else {
-                statusDot.className = 'status-dot disconnected';
-                statusText.textContent = 'Demo Mode';
-            }
-        }
+        function updateStats(tweets) {
+            const statsBar = document.getElementById('statsBar');
+            const totalTweets = document.getElementById('totalTweets');
+            const totalLikes = document.getElementById('totalLikes');
+            const totalRetweets = document.getElementById('totalRetweets');
 
-        // Tab switching
-        function switchTab(tab) {
-            currentTab = tab;
-            
-            // Update tab buttons
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.getAttribute('data-tab') === tab) {
-                    btn.classList.add('active');
-                }
-            });
-            
-            // Hide all panels
-            document.getElementById('userSearch').style.display = 'none';
-            document.getElementById('keywordSearch').style.display = 'none';
-            document.getElementById('trendingSearch').style.display = 'none';
-            
-            // Show selected panel
-            if (tab === 'user') {
-                document.getElementById('userSearch').style.display = 'block';
-            } else if (tab === 'keyword') {
-                document.getElementById('keywordSearch').style.display = 'block';
-            } else if (tab === 'trending') {
-                document.getElementById('trendingSearch').style.display = 'block';
-            }
-            
-            // Clear results
-            hideAllSections();
-        }
+            const likes = tweets.reduce((sum, tweet) => sum + (tweet.metrics?.like_count || 0), 0);
+            const retweets = tweets.reduce((sum, tweet) => sum + (tweet.metrics?.retweet_count || 0), 0);
 
-        // Filter toggle
-        function toggleFilter(element, filter) {
-            // Remove active from all filters
-            document.querySelectorAll('.filter-chip').forEach(chip => {
-                chip.classList.remove('active');
-            });
-            
-            // Add active to clicked filter
-            element.classList.add('active');
-            currentFilter = filter;
-            
-            // Re-filter results if we have any
-            if (allPosts.length > 0) {
-                filterPosts();
-            }
-        }
+            totalTweets.textContent = tweets.length;
+            totalLikes.textContent = formatNumber(likes);
+            totalRetweets.textContent = formatNumber(retweets);
 
-        // Search by user
-        async function searchByUser() {
-            const username = document.getElementById('userInput').value.trim();
-            if (!username) {
-                alert('Please enter a username');
-                return;
-            }
-            
-            showLoading();
-            
-            try {
-                if (isConnected) {
-                    // Real API call
-                    const response = await fetch(`${API_BASE}/search/user`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ 
-                            username: username.replace('@', ''),
-                            keywords: ['plasma', 'stable', 'trillion']
-                        })
-                    });
-                    
-                    if (!response.ok) throw new Error('Search failed');
-                    
-                    const data = await response.json();
-                    allPosts = data.posts || [];
-                } else {
-                    // Demo data
-                    await new Promise(resolve => setTimeout(resolve, 1500));
-                    allPosts = generateDemoPosts(username);
-                }
-                
-                displayResults();
-            } catch (error) {
-                console.error('Search error:', error);
-                showError('Failed to search. Please try again.');
-            }
-        }
-
-        // Search by keyword
-        async function searchByKeyword() {
-            const keywords = document.getElementById('keywordInput').value.trim();
-            if (!keywords) {
-                alert('Please enter keywords');
-                return;
-            }
-            
-            showLoading();
-            
-            try {
-                if (isConnected) {
-                    // Real API call
-                    const response = await fetch(`${API_BASE}/search/keyword`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ 
-                            keywords: keywords.split(' ')
-                        })
-                    });
-                    
-                    if (!response.ok) throw new Error('Search failed');
-                    
-                    const data = await response.json();
-                    allPosts = data.posts || [];
-                } else {
-                    // Demo data
-                    await new Promise(resolve => setTimeout(resolve, 1500));
-                    allPosts = generateDemoKeywordPosts(keywords);
-                }
-                
-                displayResults();
-            } catch (error) {
-                console.error('Search error:', error);
-                showError('Failed to search. Please try again.');
-            }
-        }
-
-        // Load trending posts
-        async function loadTrending() {
-            showLoading();
-            
-            try {
-                if (isConnected) {
-                    // Real API call
-                    const response = await fetch(`${API_BASE}/trending`);
-                    if (!response.ok) throw new Error('Failed to load trending');
-                    
-                    const data = await response.json();
-                    allPosts = data.posts || [];
-                } else {
-                    // Demo data
-                    await new Promise(resolve => setTimeout(resolve, 1500));
-                    allPosts = generateTrendingPosts();
-                }
-                
-                displayResults();
-            } catch (error) {
-                console.error('Trending error:', error);
-                showError('Failed to load trending posts.');
-            }
-        }
-
-        // Display results
-        function displayResults() {
-            hideAllSections();
-            
-            if (allPosts.length === 0) {
-                document.getElementById('emptyState').style.display = 'block';
-                return;
-            }
-            
-            // Show stats and results sections
-            document.getElementById('statsSection').style.display = 'grid';
-            document.getElementById('resultsSection').style.display = 'block';
-            
-            // Update stats
-            updateStats();
-            
-            // Filter and display posts
-            filterPosts();
-        }
-
-        // Filter posts based on current filter
-        function filterPosts() {
-            let filteredPosts = [...allPosts];
-            
-            if (currentFilter === 'plasma') {
-                filteredPosts = filteredPosts.filter(post => 
-                    post.content.toLowerCase().includes('plasma')
-                );
-            } else if (currentFilter === 'stable') {
-                filteredPosts = filteredPosts.filter(post => 
-                    post.content.toLowerCase().includes('stable')
-                );
-            } else if (currentFilter === 'verified') {
-                filteredPosts = filteredPosts.filter(post => post.verified);
-            } else if (currentFilter === 'recent') {
-                const oneDayAgo = Date.now() - (24 * 60 * 60 * 1000);
-                filteredPosts = filteredPosts.filter(post => 
-                    new Date(post.timestamp).getTime() > oneDayAgo
-                );
-            }
-            
-            renderPosts(filteredPosts);
-        }
-
-        // Render posts to grid
-        function renderPosts(posts) {
-            const grid = document.getElementById('postsGrid');
-            grid.innerHTML = '';
-            
-            posts.forEach(post => {
-                const card = createPostCard(post);
-                grid.appendChild(card);
-            });
-        }
-
-        // Create post card element
-        function createPostCard(post) {
-            const card = document.createElement('div');
-            card.className = 'post-card';
-            
-            // Highlight keywords
-            let content = post.content;
-            ['plasma', 'stable', 'trillion'].forEach(keyword => {
-                const regex = new RegExp(`(${keyword})`, 'gi');
-                content = content.replace(regex, '<span class="post-keyword">$1</span>');
-            });
-            
-            card.innerHTML = `
-                <div class="post-header">
-                    <div class="post-avatar">
-                        ${post.avatar ? `<img src="${post.avatar}" alt="${post.username}">` : post.username.charAt(0).toUpperCase()}
-                    </div>
-                    <div class="post-meta">
-                        <div class="post-username">${post.username}</div>
-                        <div class="post-time">${formatTime(post.timestamp)}</div>
-                    </div>
-                </div>
-                <div class="post-content">${content}</div>
-                <div class="post-stats">
-                    <div class="post-stat">
-                        <span class="post-stat-icon">❤️</span>
-                        <span>${formatNumber(post.likes)}</span>
-                    </div>
-                    <div class="post-stat">
-                        <span class="post-stat-icon">🔄</span>
-                        <span>${formatNumber(post.retweets)}</span>
-                    </div>
-                    <div class="post-stat">
-                        <span class="post-stat-icon">💬</span>
-                        <span>${formatNumber(post.replies)}</span>
-                    </div>
-                </div>
-            `;
-            
-            return card;
-        }
-
-        // Update statistics
-        function updateStats() {
-            const plasmaCount = allPosts.filter(p => p.content.toLowerCase().includes('plasma')).length;
-            const stableCount = allPosts.filter(p => p.content.toLowerCase().includes('stable')).length;
-            const totalEngagement = allPosts.reduce((sum, p) => sum + p.likes + p.retweets + p.replies, 0);
-            
-            document.getElementById('totalPosts').textContent = allPosts.length;
-            document.getElementById('plasmaCount').textContent = plasmaCount;
-            document.getElementById('stableCount').textContent = stableCount;
-            document.getElementById('engagementCount').textContent = formatNumber(totalEngagement);
-        }
-
-        // Sort results
-        function sortResults(sortBy) {
-            let sortedPosts = [...allPosts];
-            
-            switch(sortBy) {
-                case 'recent':
-                    sortedPosts.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-                    break;
-                case 'engagement':
-                    sortedPosts.sort((a, b) => 
-                        (b.likes + b.retweets + b.replies) - (a.likes + a.retweets + a.replies)
-                    );
-                    break;
-                case 'likes':
-                    sortedPosts.sort((a, b) => b.likes - a.likes);
-                    break;
-                case 'retweets':
-                    sortedPosts.sort((a, b) => b.retweets - a.retweets);
-                    break;
-            }
-            
-            allPosts = sortedPosts;
-            filterPosts();
-        }
-
-        // Utility functions
-        function showLoading() {
-            hideAllSections();
-            document.getElementById('loadingContainer').style.display = 'block';
-        }
-
-        function hideAllSections() {
-            document.getElementById('statsSection').style.display = 'none';
-            document.getElementById('resultsSection').style.display = 'none';
-            document.getElementById('loadingContainer').style.display = 'none';
-            document.getElementById('emptyState').style.display = 'none';
-        }
-
-        function showError(message) {
-            hideAllSections();
-            const emptyState = document.getElementById('emptyState');
-            emptyState.querySelector('.empty-title').textContent = 'Error';
-            emptyState.querySelector('.empty-text').textContent = message;
-            emptyState.style.display = 'block';
-        }
-
-        function formatTime(timestamp) {
-            const date = new Date(timestamp);
-            const now = new Date();
-            const diff = now - date;
-            
-            const minutes = Math.floor(diff / 60000);
-            const hours = Math.floor(diff / 3600000);
-            const days = Math.floor(diff / 86400000);
-            
-            if (minutes < 60) return `${minutes}m ago`;
-            if (hours < 24) return `${hours}h ago`;
-            if (days < 7) return `${days}d ago`;
-            
-            return date.toLocaleDateString();
+            statsBar.style.display = 'flex';
         }
 
         function formatNumber(num) {
@@ -1147,82 +390,121 @@
             return num.toString();
         }
 
-        // Demo data generators
-        function generateDemoPosts(username) {
-            const posts = [];
-            const contents = [
-                `Just staked my $PLASMA tokens! The future of DeFi is here 🚀 #Plasma #Stable`,
-                `$STABLE is holding strong during this market volatility. Plasma ecosystem proving its worth!`,
-                `Reached my first trillion $PLASMA! Who else is accumulating? 💎🙌`,
-                `The Plasma community is amazing! Stable gains every day 📈`,
-                `New to Plasma but already loving the stable returns. This is the way!`,
-                `Plasma protocol update looking bullish! Stable yields incoming 🔥`
-            ];
-            
-            for (let i = 0; i < 6; i++) {
-                posts.push({
-                    id: i + 1,
-                    username: username.replace('@', ''),
-                    avatar: null,
-                    content: contents[i],
-                    timestamp: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000),
-                    likes: Math.floor(Math.random() * 1000),
-                    retweets: Math.floor(Math.random() * 500),
-                    replies: Math.floor(Math.random() * 100),
-                    verified: Math.random() > 0.5
-                });
-            }
-            
-            return posts;
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString() + ' at ' + date.toLocaleTimeString();
         }
 
-        function generateDemoKeywordPosts(keywords) {
-            const posts = [];
-            const usernames = ['@plasmawhale', '@stableking', '@trillionaire', '@defi_master', '@crypto_guru'];
+        function displayTweets(tweets) {
+            const resultsContainer = document.getElementById('results');
             
-            for (let i = 0; i < 10; i++) {
-                posts.push({
-                    id: i + 1,
-                    username: usernames[Math.floor(Math.random() * usernames.length)],
-                    avatar: null,
-                    content: `Interesting analysis on ${keywords}. The Plasma ecosystem continues to grow! #DeFi`,
-                    timestamp: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000),
-                    likes: Math.floor(Math.random() * 5000),
-                    retweets: Math.floor(Math.random() * 2000),
-                    replies: Math.floor(Math.random() * 500),
-                    verified: Math.random() > 0.3
-                });
+            if (tweets.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="tweet-card">
+                        <h3 style="text-align: center; color: #666;">No tweets found for this search term.</h3>
+                        <p style="text-align: center; margin-top: 10px;">Try searching for "plasma stablecoin", "XPL", or "trillions".</p>
+                    </div>
+                `;
+                return;
             }
-            
-            return posts;
+
+            resultsContainer.innerHTML = tweets.map(tweet => `
+                <div class="tweet-card">
+                    <div class="author-info">
+                        <img 
+                            src="${tweet.author.profile_image || '/api/placeholder/50/50'}" 
+                            alt="${tweet.author.name}" 
+                            class="author-avatar"
+                            onerror="this.src='/api/placeholder/50/50'"
+                        >
+                        <div class="author-details">
+                            <h3>
+                                ${tweet.author.name}
+                                ${tweet.author.verified ? '<span class="verified">✓</span>' : ''}
+                            </h3>
+                            <div class="author-username">@${tweet.author.username}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="tweet-text">${tweet.text}</div>
+                    
+                    <div class="tweet-metrics">
+                        <div class="metric likes">❤️ ${formatNumber(tweet.metrics?.like_count || 0)}</div>
+                        <div class="metric retweets">🔄 ${formatNumber(tweet.metrics?.retweet_count || 0)}</div>
+                        <div class="metric replies">💬 ${formatNumber(tweet.metrics?.reply_count || 0)}</div>
+                    </div>
+                    
+                    <div class="tweet-date">📅 ${formatDate(tweet.created_at)}</div>
+                    
+                    <a href="${tweet.url}" target="_blank" class="tweet-link">
+                        🐦 View on Twitter
+                    </a>
+                </div>
+            `).join('');
+
+            updateStats(tweets);
         }
 
-        function generateTrendingPosts() {
-            const posts = [];
-            const trending = [
-                { user: '@plasmawhale', content: 'BREAKING: Plasma hits new ATH! Stable yields for everyone! 🚀' },
-                { user: '@defi_news', content: 'Plasma protocol surpasses $1 trillion in TVL. Stable growth continues!' },
-                { user: '@crypto_insider', content: 'Why Plasma is the future of DeFi. Thread 🧵👇' },
-                { user: '@stablegenius', content: 'My Plasma portfolio just hit 7 figures. Thank you Stable community!' },
-                { user: '@trillion_club', content: 'Welcome to the trillion club! $PLASMA holders unite! 💪' }
-            ];
+        async function performSearch() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (!query) {
+                showStatus('Please enter a search term!', 'error');
+                setTimeout(hideStatus, 3000);
+                return;
+            }
+
+            showStatus('🔍 Searching Twitter for: ' + query, 'loading');
             
-            trending.forEach((item, i) => {
-                posts.push({
-                    id: i + 1,
-                    username: item.user,
-                    avatar: null,
-                    content: item.content,
-                    timestamp: new Date(Date.now() - Math.random() * 24 * 60 * 60 * 1000),
-                    likes: Math.floor(Math.random() * 10000) + 5000,
-                    retweets: Math.floor(Math.random() * 5000) + 2000,
-                    replies: Math.floor(Math.random() * 1000) + 500,
-                    verified: true
+            try {
+                // First, save the search query
+                await fetch(`${API_BASE_URL}/users`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username: query })
                 });
-            });
-            
-            return posts;
+
+                // Then search Twitter
+                const response = await fetch(`${API_BASE_URL}/api/search-twitter?query=${encodeURIComponent(query)}&max_results=20`);
+                const data = await response.json();
+
+                if (data.success && data.tweets) {
+                    showStatus(`✅ Found ${data.tweets.length} tweets about "${query}"`, 'success');
+                    displayTweets(data.tweets);
+                    setTimeout(hideStatus, 3000);
+                } else {
+                    throw new Error(data.details || 'Failed to search Twitter');
+                }
+            } catch (error) {
+                console.error('Search error:', error);
+                showStatus(`❌ Error: ${error.message}`, 'error');
+                document.getElementById('results').innerHTML = `
+                    <div class="tweet-card">
+                        <h3 style="color: #ff6b6b;">Search Failed</h3>
+                        <p>Error: ${error.message}</p>
+                        <p style="margin-top: 15px;">This might be due to Twitter API rate limits. Please try again in a few minutes.</p>
+                    </div>
+                `;
+                setTimeout(hideStatus, 5000);
+            }
         }
+
+        function quickSearch(query) {
+            document.getElementById('searchInput').value = query;
+            performSearch();
+        }
+
+        function handleEnterKey(event) {
+            if (event.key === 'Enter') {
+                performSearch();
+            }
+        }
+
+        // Load default search on page load
+        window.onload = function() {
+            quickSearch('plasma stablecoin');
+        };
     </script>
 </body>
 </html>
